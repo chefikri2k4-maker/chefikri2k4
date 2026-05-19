@@ -1,1 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio-Kinetic Derivatives in Food Security: Retort Processing</title>
+    <!-- Tailwind CSS for sleek UI -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Chart.js for high-performance rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #111827 0%, #1f2937 100%); }
+        .card-bg { background: rgba(31, 41, 55, 0.6); backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="gradient-bg text-gray-100 min-h-screen font-sans antialiased">
 
+    <!-- Top Navigation / Header -->
+    <header class="border-b border-gray-800 bg-gray-900/80 sticky top-0 z-50 backdrop-blur">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase">SFM: Food Security (Malaysia)</span>
+                <h1 class="text-xl font-bold text-white">Bio-Kinetic Sterilization Simulator</h1>
+            </div>
+            <div class="text-sm text-gray-400 bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-700">
+                Application of Derivatives: <span class="text-emerald-400 font-mono">f'(t)</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Sidebar: Mathematical & Bioscience Framework -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+            
+            <!-- Context Section -->
+            <div class="card-bg p-6 rounded-2xl border border-gray-800 shadow-xl">
+                <h2 class="text-lg font-bold text-emerald-400 mb-3 flex items-center gap-2">
+                    <span>🔬</span> Scenario: Retort Processing of Rendang
+                </h2>
+                <p class="text-gray-300 text-sm leading-relaxed mb-4">
+                    To guarantee commercial sterility and food safety in ambient Malaysian storage conditions, traditional *Rendang Daging* undergoes thermal retort processing. We model the logarithmic thermal destruction kinetics of <span class="text-red-400 italic">Clostridium botulinum</span> spores at a constant processing temperature of $121.1^\circ\text{C}$.
+                </p>
+                <div class="text-xs text-gray-400 border-t border-gray-800 pt-3">
+                    <span class="font-semibold block text-gray-300 mb-1">Data References & Frameworks:</span>
+                    • MARDI (Malaysian Agricultural Research and Development Institute) Retort Guidelines<br>
+                    • FDA Bad Bug Book (Thermal Inactivation Kinetics: Logarithmic Thermal Death Model)
+                </div>
+            </div>
+
+            <!-- Mathematical Modeling Section -->
+            <div class="card-bg p-6 rounded-2xl border border-gray-800 shadow-xl">
+                <h2 class="text-lg font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                    <span>📐</span> Bio-Kinetic Functions
+                </h2>
+                
+                <div class="space-y-4">
+                    <!-- Base Function -->
+                    <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 block mb-1">Spore Population Curve: f(t)</span>
+                        <div class="text-lg font-mono text-white mb-2">f(t) = N₀ · e^(-k · t)</div>
+                        <p class="text-xs text-gray-400">
+                            Where $N_0 = 1,000,000$ (Initial spore count), and $k = 0.35\text{ min}^{-1}$ (Thermal death kinetic constant derived from standard $D$-value of 6.57 seconds).
+                        </p>
+                    </div>
+
+                    <!-- Derivative Function -->
+                    <div class="bg-emerald-950/20 p-4 rounded-xl border border-emerald-900/50">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400 block mb-1">Inactivation Rate (Derivative): f'(t)</span>
+                        <div class="text-lg font-mono text-emerald-300 mb-2">f'(t) = -k · N₀ · e^(-k · t)</div>
+                        <p class="text-xs text-emerald-500/90">
+                            By the Chain Rule, the derivative reveals the <strong>instantaneous spore destruction rate</strong> per minute at exactly time $t$.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Main Panel: Graph & Interactive Tool -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+            
+            <!-- Graph Area -->
+            <div class="card-bg p-6 rounded-2xl border border-gray-800 shadow-xl flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Thermal Inactivation Profile</h2>
+                            <p class="text-xs text-gray-400">Click anywhere inside the chart line boundaries to analyze processing metrics at that timestamp.</p>
+                        </div>
+                        <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-2.5 py-1 rounded-full font-medium">
+                            Live Derivative Calculator Active
+                        </span>
+                    </div>
+                    
+                    <!-- Chart container -->
+                    <div class="relative w-full h-[350px] bg-gray-900/40 p-2 rounded-xl border border-gray-800">
+                        <canvas id="kineticsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Output Widget Dashboard -->
+            <div id="inspectorPanel" class="bg-slate-900/80 border-2 border-dashed border-gray-700 rounded-2xl p-6 transition-all duration-300">
+                <div id="placeholderText" class="text-center py-6">
+                    <span class="text-3xl block mb-2">🖱️</span>
+                    <p class="text-gray-400 text-sm font-medium">Click on the timeline graph above to calculate the derivative at that processing step.</p>
+                </div>
+                
+                <div id="analysisContent" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Calculus Calculus Readout -->
+                    <div class="space-y-3">
+                        <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Calculated Derivative Metrics</h3>
+                        <div>
+                            <span class="text-gray-400 text-xs block">Processing Time (t):</span>
+                            <span id="outTime" class="text-xl font-mono text-white font-bold">--</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-gray-400 text-xs block">Remaining Spores f(t):</span>
+                                <span id="outPopulation" class="text-lg font-mono text-blue-400 font-semibold">--</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400 text-xs block">Rate of Change f'(t):</span>
+                                <span id="outDerivative" class="text-lg font-mono text-red-400 font-semibold">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Food Security Interpretation -->
+                    <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 flex flex-col justify-center">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-widest mb-1">Food Scientist Translation</h3>
+                        <p id="laymanExplanation" class="text-gray-300 text-sm leading-relaxed">
+                            Click a point to parse processing efficiency.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Kinetic Constant Constants Configuration
+        const N0 = 1000000; // Initial population of spores per pouch
+        const k = 0.35;    // Inactivation coefficient rate constant (min^-1)
+        const maxTime = 15; // Complete tracking time block in minutes
+
+        // Generate Dataset Array
+        const timePoints = [];
+        const populationData = [];
+        for (let t = 0; t <= maxTime; t += 0.2) {
+            timePoints.push(Number(t.toFixed(1)));
+            // f(t) = N0 * e^(-k * t)
+            populationData.push(Math.round(N0 * Math.exp(-k * t)));
+        }
+
+        // Initialize Chart.js Instance
+        const ctx = document.getElementById('kineticsChart').getContext('2d');
+        const kineticsChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timePoints,
+                datasets: [{
+                    label: 'Active Bacterial Spores f(t)',
+                    data: populationData,
+                    borderColor: '#10b981', // emerald-500
+                    borderWidth: 3,
+                    pointBackgroundColor: '#34d399',
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#ef4444',
+                    fill: false,
+                    tension: 0.2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Processing Sterilization Time (Minutes)', color: '#9ca3af', font: { weight: 'bold' } },
+                        grid: { color: '#374151' },
+                        ticks: { color: '#9ca3af' }
+                    },
+                    y: {
+                        type: 'linear',
+                        title: { display: true, text: 'Spore Count (N) per Pouch', color: '#9ca3af', font: { weight: 'bold' } },
+                        grid: { color: '#374151' },
+                        ticks: { color: '#9ca3af' },
+                        min: 0
+                    }
+                },
+                onClick: (e) => {
+                    // Extract data point array indices based on mouse click target configuration
+                    const points = kineticsChart.getElementsAtEventForMode(e, 'nearest', { intersect: false }, true);
+                    if (points.length > 0) {
+                        const index = points[0].index;
+                        const t = timePoints[index];
+                        calculateMetricsAtPoint(t);
+                    }
+                }
+            }
+        });
+
+        // Compute Analytical Derivative and Generate Human Language Translation
+        function calculateMetricsAtPoint(t) {
+            // Function value calculation
+            const population = Math.round(N0 * Math.exp(-k * t));
+            
+            // Exact Analytical Derivative computation: f'(t) = -k * N0 * e^(-k * t)
+            const derivative = -k * N0 * Math.exp(-k * t);
+            const rateOfInactivation = Math.abs(Math.round(derivative));
+
+            // UI Manipulation Elements Mapping
+            const panel = document.getElementById('inspectorPanel');
+            const placeholder = document.getElementById('placeholderText');
+            const content = document.getElementById('analysisContent');
+
+            placeholder.classList.add('hidden');
+            content.classList.remove('hidden');
+            
+            // Style changes dynamically based on critical target checks
+            panel.classList.remove('border-gray-700', 'bg-slate-900/80');
+            panel.classList.add('border-emerald-500', 'bg-emerald-950/10');
+
+            // Injecting calculated dynamic analytical text data values
+            document.getElementById('outTime').innerText = `${t.toFixed(1)} Minutes`;
+            document.getElementById('outPopulation').innerText = population.toLocaleString();
+            document.getElementById('outDerivative').innerText = `${derivative.toLocaleString(undefined, {maximumFractionDigits: 0})} / min`;
+
+            // Generation of specialized layman processing interpretations
+            let strategyTranslation = "";
+            if (t < 3) {
+                strategyTranslation = `At ${t} minutes, the retort chamber is experiencing hyper-efficient pasteurization. Spores are being neutralized at a critical velocity of ${rateOfInactivation.toLocaleString()} per minute. This high derivative magnitude shows optimal heat integration penetration into the thick Rendang base.`;
+            } else if (t >= 3 && t < 8) {
+                strategyTranslation = `By minute ${t}, the system remains highly lethal, destroying roughly ${rateOfInactivation.toLocaleString()} remaining spores every single minute. The shrinking magnitude of the derivative indicates the bacterial populations are collapsing safely down into structural thresholds.`;
+            } else {
+                strategyTranslation = `At the late phase of ${t} minutes, the absolute processing derivative drops to ${rateOfInactivation.toLocaleString()} spores/min because nearly all hazards are structurally destroyed (${population.toLocaleString()} left). Maintaining heat now stabilizes biological preservation values without burning the traditional recipe texture.`;
+            }
+            
+            document.getElementById('laymanExplanation').innerHTML = strategyTranslation;
+        }
+    </script>
+</body>
+</html>
